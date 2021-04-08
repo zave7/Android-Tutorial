@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Tutorial" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Tutorial" parent="Theme.MaterialComponents.DayNight.NoActionBar"> <!-- NoActionBar 로 바꾸면 액션바가 사라짐 -->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
