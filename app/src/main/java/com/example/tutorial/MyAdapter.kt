@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.Exception
 
 class MyAdapter (val context : Context,
                  var list : List<MemoEntity>,
-                 val onDeleteListener: OnDeleteListener) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+                 val onDeleteListener: OnDeleteListener)
+    : RecyclerView.Adapter<MyAdapter.MyViewHolder>(), ItemTouchHelperListener {
 
     override fun getItemCount(): Int {
         return list.size
@@ -26,6 +28,7 @@ class MyAdapter (val context : Context,
     }
 
     override fun onBindViewHolder(holder: MyAdapter.MyViewHolder, position: Int) {
+
         // list = 1, 2, 3
         val memo = list[position]
 
@@ -38,11 +41,22 @@ class MyAdapter (val context : Context,
             }
 
         })
+
     }
 
+    // 뷰 홀더 상속
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         val memo = itemView.findViewById<TextView>(R.id.textview_memo)
         val root = itemView.findViewById<ConstraintLayout>(R.id.root)
     }
+
+    // 스와이프 구현
+    override fun onItemSwiped(position: Int) {
+        // 스와이프했을때 memo delete
+        onDeleteListener.onDeleteListener(list[position])
+    }
+
+
 
 }

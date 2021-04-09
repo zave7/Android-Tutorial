@@ -17,4 +17,5 @@ interface MemoDAO {
 
     @Delete
     fun delete(memo : MemoEntity)
+
 }
