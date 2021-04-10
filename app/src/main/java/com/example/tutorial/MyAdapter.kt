@@ -6,29 +6,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.Exception
 
-class MyAdapter (val context : Context,
-                 var list : List<MemoEntity>,
-                 val onDeleteListener: OnDeleteListener)
+class MyAdapter (private val context : Context,
+
+                 
+                 private var list : List<MemoEntity>,
+                 private val onDeleteListener: OnDeleteListener)
     : RecyclerView.Adapter<MyAdapter.MyViewHolder>(), ItemTouchHelperListener {
 
+    // 여기서 리스트의 갯수를 센 후 onBindViewHolder 그 수만큼 호출되는듯
     override fun getItemCount(): Int {
+        Log.d("getItemCount : ", "호출")
+        Log.d("list.size :", "${list.size}")
         return list.size
     }
 
     // 뷰 홀더를 작성
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
-
+    @NonNull
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+        Log.d("onCreateViewHolder", "호출")
         val itemView = LayoutInflater.from(context).inflate(R.layout.item_memo, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: MyAdapter.MyViewHolder, position: Int) {
-
+    override fun onBindViewHolder(@NonNull holder: MyAdapter.MyViewHolder, position: Int) {
+        Log.d("onBindViewHolder", "호출")
+        Log.d("호출 position : ", "$position")
         // list = 1, 2, 3
         val memo = list[position]
 
@@ -36,12 +42,28 @@ class MyAdapter (val context : Context,
         holder.root.setOnLongClickListener(object : View.OnLongClickListener{
             override fun onLongClick(v: View?): Boolean {
                 // 클릭이 되었을때 delete
-                onDeleteListener.onDeleteListener(memo)
+                onDeleteListener.deleteAndAllReload(memo)
                 return true
             }
 
         })
+    }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        Log.d("onAttachedToRecycl", "호출")
+    }
+
+    override fun onViewAttachedToWindow(holder: MyViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        Log.d("onViewAttachedToWi", "호출")
+        Log.d("메모내용 : ", "${holder.memo.text}")
+    }
+
+    override fun onViewDetachedFromWindow(holder: MyViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        Log.d("onViewDetachedFromWin", "호출")
+        Log.d("메모내용 : ", "${holder.memo.text}")
     }
 
     // 뷰 홀더 상속
@@ -53,10 +75,10 @@ class MyAdapter (val context : Context,
 
     // 스와이프 구현
     override fun onItemSwiped(position: Int) {
-        // 스와이프했을때 memo delete
-        onDeleteListener.onDeleteListener(list[position])
+        Log.d("onItemSwiped", "호출")
+        Log.d("$position 번 메모삭제", list[position].memo)
+
+        onDeleteListener.deleteAndAllReload(list[position])
     }
-
-
 
 }

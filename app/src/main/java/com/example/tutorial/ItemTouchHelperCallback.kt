@@ -11,7 +11,7 @@ class ItemTouchHelperCallback(private val listener: ItemTouchHelperListener) : I
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
 
         val swipeFlags = ( ItemTouchHelper.START or ItemTouchHelper.END )
-        return makeMovementFlags(ItemTouchHelper.UP, swipeFlags)
+        return makeMovementFlags(0, swipeFlags)
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
