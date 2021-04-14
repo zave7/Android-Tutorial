@@ -28,7 +28,7 @@ class MyAdapter (private val context : Context,
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
         Log.d("onCreateViewHolder", "호출")
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_memo, parent, false)
+        val itemView : View = LayoutInflater.from(context).inflate(R.layout.item_memo, parent, false)
         return MyViewHolder(itemView)
     }
 
@@ -66,19 +66,19 @@ class MyAdapter (private val context : Context,
         Log.d("메모내용 : ", "${holder.memo.text}")
     }
 
-    // 뷰 홀더 상속
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val memo = itemView.findViewById<TextView>(R.id.textview_memo)
-        val root = itemView.findViewById<ConstraintLayout>(R.id.root)
-    }
-
     // 스와이프 구현
     override fun onItemSwiped(position: Int) {
         Log.d("onItemSwiped", "호출")
         Log.d("$position 번 메모삭제", list[position].memo)
 
         onDeleteListener.deleteAndAllReload(list[position])
+    }
+
+    // 뷰 홀더 상속
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        val memo = itemView.findViewById<TextView>(R.id.textview_memo)
+        val root = itemView.findViewById<ConstraintLayout>(R.id.root)
     }
 
 }
