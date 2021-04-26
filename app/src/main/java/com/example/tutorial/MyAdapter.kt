@@ -11,8 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
 class MyAdapter (private val context : Context,
-
-                 
                  private var list : List<MemoEntity>,
                  private val onDeleteListener: OnDeleteListener)
     : RecyclerView.Adapter<MyAdapter.MyViewHolder>(), ItemTouchHelperListener {
@@ -79,6 +77,10 @@ class MyAdapter (private val context : Context,
 
         val memo = itemView.findViewById<TextView>(R.id.textview_memo)
         val root = itemView.findViewById<ConstraintLayout>(R.id.root)
+
+        
     }
+
+
 
 }

@@ -93,7 +93,6 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
 
             override fun doInBackground(vararg params: Unit?) {
                 // WorkThread 에서 할 작업
-                findViewById<EditText>(R.id.edittext_memo).setText("")
                 db.memoDAO().insert(memo)
             }
 
@@ -103,16 +102,19 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
             }
         }
         insertTask.execute()
+        findViewById<EditText>(R.id.edittext_memo).setText("")
     }
 
     fun getAllMemos() {
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 memoList = db.memoDAO().getAll()
+                Log.d("doInBackground memo len", memoList.size.toString())
             }
 
             // 작업 후에 호출되는 메서드
             override fun onPostExecute(result: Unit?) {
+                Log.d("onPostExecute memo len", memoList.size.toString())
                 super.onPostExecute(result)
                 setRecyclerView()
             }
@@ -144,7 +146,9 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     }
 
     private fun setSwipedEvent(itemHelper : ItemTouchHelperListener) {
-        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(itemHelper))
+        Log.d("setSwipedEvent memo len", memoList.size.toString())
+        // IndexOutOfBoundsException 발생하는 이유 찾음
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(ItemTouchHelper(this, memoList)))
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
