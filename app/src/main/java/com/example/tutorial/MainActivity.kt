@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     // 메모 엔티티 리스트
     var memoList = listOf<MemoEntity>()
     // 아이템 터치 헬퍼
-    lateinit var itemTouchHelper : ItemTouchHelper
+    var itemTouchHelper : ItemTouchHelper? = null
     // 리사이클러뷰
     val recyclerView :RecyclerView by lazy {
         findViewById<RecyclerView>(R.id.recyclerView)
@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         // 레이아웃 매니져 설정
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.d("여기1", "레이아웃 매니져 설정")
-        getAllMemos()
+        // getAllMemos()
+        getAllActiveMemo()
         Log.d("여기1", "모든 메모 로드")
     }
 
@@ -98,7 +99,8 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
 
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
-                getAllMemos()
+                // getAllMemos()
+                getAllActiveMemo()
             }
         }
         insertTask.execute()
@@ -126,12 +128,15 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     fun deleteMemo(memo : MemoEntity) {
         val deleteTask = object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
-                db.memoDAO().delete(memo)
+                // db.memoDAO().delete(memo)
+                val id : String = memo.id.toString()
+                db.memoDAO().delete(id)
             }
 
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
-                getAllMemos()
+                // getAllMemos()
+                getAllActiveMemo()
             }
 
         }
@@ -148,18 +153,26 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     private fun setSwipedEvent(itemHelper : ItemTouchHelperListener) {
         Log.d("setSwipedEvent memo len", memoList.size.toString())
         // IndexOutOfBoundsException 발생하는 이유 찾음
+        // 헬퍼 구현체가 남아있는 문제 발생
+        if(itemTouchHelper != null)
+            Log.d("ItemTouchHelper status", "null")
+        Log.d("first itemTouchHelper", itemTouchHelper.toString())
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(ItemTouchHelper(this, memoList)))
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper!!.attachToRecyclerView(recyclerView)
+        Log.d("second itemTouchHelper", itemTouchHelper.toString())
     }
 
     override fun deleteAndAllReload(memo: MemoEntity) {
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
-                db.memoDAO().delete(memo)
+                // db.memoDAO().delete(memo)
+                val id : String = memo.id.toString()
+                db.memoDAO().delete(id)
             }
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
-                getAllMemos()
+                // getAllMemos()
+                getAllActiveMemo()
             }
         }).execute()
     }
@@ -172,10 +185,28 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         }).execute()
     }
 
+    override fun deleteByStatus(memo: MemoEntity) {
+        (object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                val id : String = memo.id.toString()
+                db.memoDAO().delete(id)
+            }
+        }).execute()
+    }
+
+
     fun getAllMemo() {
         (object : AsyncTask<Unit, Unit, Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 memoList = db.memoDAO().getAll()
+            }
+        }).execute()
+    }
+
+    fun getAllActiveMemo() {
+        (object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                memoList = db.memoDAO().getActiveAll()
             }
         }).execute()
     }

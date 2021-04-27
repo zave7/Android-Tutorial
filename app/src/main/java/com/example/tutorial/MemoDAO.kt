@@ -15,7 +15,12 @@ interface MemoDAO {
     @Query("SELECT * FROM memo")
     fun getAll() : List<MemoEntity>
 
+    @Query("SELECT * FROM memo WHERE status = 'A'")
+    fun getActiveAll() : List<MemoEntity>
+
     @Delete
     fun delete(memo : MemoEntity)
 
+    @Query("UPDATE memo SET status = 'D' WHERE id = :id")
+    fun delete(id : String)
 }

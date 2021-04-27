@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class MemoEntity(
         @PrimaryKey(autoGenerate = true)
         var id : Long?,
-        var memo : String = ""
+        var memo : String = "",
+        var status : String = "A"
 
         // 메모 상태 값
         // A : 활성상태
