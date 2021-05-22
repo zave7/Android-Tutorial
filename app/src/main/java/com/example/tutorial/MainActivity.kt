@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     // AsyncTask 때문에 메모리 누수가 일어 날 수 있기 때문에..
     @RequiresApi(Build.VERSION_CODES.O)
     private fun insertMemo(memo : MemoEntity) {
-
+        Log.d("inertMemo", "start")
         // 1. MainThread vs WorkThread(BackgroundThread)
         // 화면과 관련된 작업은 Main 스레드에서
         // 데이터 작업은 작업 스레드에서
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         val memo1 = memo.memo
         if(memo1.trim().isEmpty()) {
             if(LocalDateTime.now() > insertTime) {
+                Log.d("toast", "memo Empty")
                 Toast.makeText(applicationContext, "내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 insertTime = LocalDateTime.now().plusSeconds(2L)
             }
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         }
         insertTask.execute()
         findViewById<EditText>(R.id.edittext_memo).setText("")
+        Log.d("insertMemo", "end")
     }
 
     fun getAllMemos() {
@@ -144,10 +146,12 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     }
 
     fun setRecyclerView() {
+        Log.d("setRecyclerview", "start")
         // 어댑터 구현
         val myAdapter = MyAdapter(this, memoList, this)
         recyclerView.adapter = myAdapter
         setSwipedEvent(myAdapter)
+        Log.d("setRecyclerview", "end")
     }
 
     private fun setSwipedEvent(itemHelper : ItemTouchHelperListener) {
@@ -163,6 +167,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     }
 
     override fun deleteAndAllReload(memo: MemoEntity) {
+        Log.d("deleteAndAllReload", "start")
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 // db.memoDAO().delete(memo)
@@ -175,23 +180,28 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
                 getAllActiveMemo()
             }
         }).execute()
+        Log.d("deleteAndAllReload", "end")
     }
 
     override fun delete(memo: MemoEntity) {
+        Log.d("delete", "start")
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 db.memoDAO().delete(memo)
             }
         }).execute()
+        Log.d("delete", "end")
     }
 
     override fun deleteByStatus(memo: MemoEntity) {
+        Log.d("deleteByStatus", "start")
         (object : AsyncTask<Unit, Unit, Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 val id : String = memo.id.toString()
                 db.memoDAO().delete(id)
             }
         }).execute()
+        Log.d("deleteByStatus", "end")
     }
 
 
@@ -204,10 +214,17 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
     }
 
     fun getAllActiveMemo() {
+        Log.d("getAllActiveMemo", "start")
         (object : AsyncTask<Unit, Unit, Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 memoList = db.memoDAO().getActiveAll()
+                Log.d("memoList", memoList.toString())
+            }
+
+            override fun onPostExecute(result: Unit?) {
+                setRecyclerView()
             }
         }).execute()
+        Log.d("getAllActiveMemo", "end")
     }
 }
