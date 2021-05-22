@@ -1,4 +1,4 @@
-package com.example.tutorial
+package com.example.tutorial.ui.activity.adapter
 
 import android.content.Context
 import android.util.Log
@@ -9,6 +9,10 @@ import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tutorial.R
+import com.example.tutorial.data.MemoEntity
+import com.example.tutorial.ui.event.ItemTouchHelperListener
+import com.example.tutorial.ui.event.OnDeleteListener
 
 class MyAdapter (private val context : Context,
                  private var list : List<MemoEntity>,
@@ -24,13 +28,13 @@ class MyAdapter (private val context : Context,
 
     // 뷰 홀더를 작성
     @NonNull
-    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): MyViewHolder {
         Log.d("onCreateViewHolder", "호출")
         val itemView : View = LayoutInflater.from(context).inflate(R.layout.item_memo, parent, false)
         return MyViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(@NonNull holder: MyAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(@NonNull holder: MyViewHolder, position: Int) {
         Log.d("onBindViewHolder", "호출")
         Log.d("호출 position : ", "$position")
         // list = 1, 2, 3

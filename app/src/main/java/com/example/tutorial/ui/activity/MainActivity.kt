@@ -1,4 +1,4 @@
-package com.example.tutorial
+package com.example.tutorial.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.AsyncTask
@@ -11,15 +11,20 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.view.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tutorial.R
+import com.example.tutorial.data.MemoDatabase
+import com.example.tutorial.data.MemoEntity
+import com.example.tutorial.ui.event.ItemTouchHelperCallback
+import com.example.tutorial.ui.event.ItemTouchHelperListener
+import com.example.tutorial.ui.activity.adapter.MyAdapter
+import com.example.tutorial.ui.event.OnDeleteListener
 import java.time.LocalDateTime
-import java.util.*
 
 @SuppressLint("StaticFieldLeak")
-class MainActivity : AppCompatActivity(), OnDeleteListener{
+class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     // 초기화를 나중에 해줄때 lateinit
     lateinit var db  : MemoDatabase
@@ -95,8 +100,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
 
             override fun doInBackground(vararg params: Unit?) {
                 // WorkThread 에서 할 작업
-                db.memoDAO().insert(memo)
-            }
+                db.memoDAO().insert(memo)            }
 
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
@@ -161,7 +165,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         if(itemTouchHelper != null)
             Log.d("ItemTouchHelper status", "null")
         Log.d("first itemTouchHelper", itemTouchHelper.toString())
-        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(ItemTouchHelper(this, memoList)))
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(com.example.tutorial.ui.event.ItemTouchHelper(this)))
         itemTouchHelper!!.attachToRecyclerView(recyclerView)
         Log.d("second itemTouchHelper", itemTouchHelper.toString())
     }
@@ -172,6 +176,23 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
             override fun doInBackground(vararg params: Unit?) {
                 // db.memoDAO().delete(memo)
                 val id : String = memo.id.toString()
+                db.memoDAO().delete(id)
+            }
+            override fun onPostExecute(result: Unit?) {
+                super.onPostExecute(result)
+                // getAllMemos()
+                getAllActiveMemo()
+            }
+        }).execute()
+        Log.d("deleteAndAllReload", "end")
+    }
+
+    override fun deleteAndAllReload(position : Int) {
+        Log.d("deleteAndAllReload", "start")
+        (object : AsyncTask<Unit,Unit,Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                // db.memoDAO().delete(memo)
+                val id : String = memoList[position].id.toString()
                 db.memoDAO().delete(id)
             }
             override fun onPostExecute(result: Unit?) {
@@ -218,7 +239,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener{
         (object : AsyncTask<Unit, Unit, Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 memoList = db.memoDAO().getActiveAll()
-                Log.d("memoList", memoList.toString())
+                Log.d("memoList assign", memoList.toString())
             }
 
             override fun onPostExecute(result: Unit?) {

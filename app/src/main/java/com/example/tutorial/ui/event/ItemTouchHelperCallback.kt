@@ -1,4 +1,4 @@
-package com.example.tutorial
+package com.example.tutorial.ui.event
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
