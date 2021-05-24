@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.tutorial.data.convert.DateConverter
 
-@Database(entities = arrayOf(MemoEntity::class), version = 2)
+@Database(entities = arrayOf(MemoEntity::class), version = 3)
+@TypeConverters(DateConverter::class)
 // version 은 스키마가 바뀔때 변경해줘야 한다.
 abstract class MemoDatabase : RoomDatabase() {
 

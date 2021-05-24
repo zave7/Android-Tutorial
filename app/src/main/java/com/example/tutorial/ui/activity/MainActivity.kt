@@ -1,15 +1,11 @@
 package com.example.tutorial.ui.activity
 
 import android.annotation.SuppressLint
-import android.os.AsyncTask
-import android.os.Build
+import android.content.Context
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +20,7 @@ import com.example.tutorial.ui.event.OnDeleteListener
 import java.time.LocalDateTime
 
 @SuppressLint("StaticFieldLeak")
+@RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     // 초기화를 나중에 해줄때 lateinit
@@ -39,28 +36,20 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
     lateinit var textView : TextView
 
     // 메모에 공백으로 입력했을때 토스트 메세지 띄운 시간
-    @RequiresApi(Build.VERSION_CODES.O)
     var insertTime: LocalDateTime = LocalDateTime.now()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         db = MemoDatabase.getInstance(this)!!
 
-        findViewById<Button>(R.id.button_add).setOnClickListener {
+        setButtonEvent()
 
-            val memo = MemoEntity(null, textView.text.toString())
-            insertMemo(memo)
-        }
-        Log.d("여기1", "버튼 이벤트 리스너 등록")
         // 레이아웃 매니져 설정
         recyclerView.layoutManager = LinearLayoutManager(this)
-        Log.d("여기1", "레이아웃 매니져 설정")
-        // getAllMemos()
+
         getAllActiveMemo()
-        Log.d("여기1", "모든 메모 로드")
     }
 
     override fun onResume() {
@@ -77,7 +66,6 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     // 안드로이드에서는 Lint 라는 것을 통해 성능한 문제가 있을 수 있는 코드를 관리를 해준다.
     // AsyncTask 때문에 메모리 누수가 일어 날 수 있기 때문에..
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun insertMemo(memo : MemoEntity) {
         Log.d("inertMemo", "start")
         // 1. MainThread vs WorkThread(BackgroundThread)
@@ -96,6 +84,8 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
             }
             return
         }
+
+        vibrate()
         val insertTask = object : AsyncTask<Unit, Unit, Unit>() {
 
             override fun doInBackground(vararg params: Unit?) {
@@ -136,7 +126,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
             override fun doInBackground(vararg params: Unit?) {
                 // db.memoDAO().delete(memo)
                 val id : String = memo.id.toString()
-                db.memoDAO().delete(id)
+                db.memoDAO().delete(id, LocalDateTime.now())
             }
 
             override fun onPostExecute(result: Unit?) {
@@ -172,11 +162,13 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     override fun deleteAndAllReload(memo: MemoEntity) {
         Log.d("deleteAndAllReload", "start")
+
+        vibrate()
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 // db.memoDAO().delete(memo)
                 val id : String = memo.id.toString()
-                db.memoDAO().delete(id)
+                db.memoDAO().delete(id, LocalDateTime.now())
             }
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
@@ -189,11 +181,15 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     override fun deleteAndAllReload(position : Int) {
         Log.d("deleteAndAllReload", "start")
+
+        // 삭제 시 진동
+        vibrate()
+
         (object : AsyncTask<Unit,Unit,Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 // db.memoDAO().delete(memo)
                 val id : String = memoList[position].id.toString()
-                db.memoDAO().delete(id)
+                db.memoDAO().delete(id, LocalDateTime.now())
             }
             override fun onPostExecute(result: Unit?) {
                 super.onPostExecute(result)
@@ -202,6 +198,11 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
             }
         }).execute()
         Log.d("deleteAndAllReload", "end")
+    }
+
+    private fun vibrate() {
+        val vibrate = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrate.vibrate(3L)
     }
 
     override fun delete(memo: MemoEntity) {
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
         (object : AsyncTask<Unit, Unit, Unit>() {
             override fun doInBackground(vararg params: Unit?) {
                 val id : String = memo.id.toString()
-                db.memoDAO().delete(id)
+                db.memoDAO().delete(id, LocalDateTime.now())
             }
         }).execute()
         Log.d("deleteByStatus", "end")
@@ -247,5 +248,43 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
             }
         }).execute()
         Log.d("getAllActiveMemo", "end")
+    }
+
+    private fun restore() {
+        Log.d("restore", "start")
+        vibrate()
+        (object : AsyncTask<Unit, Unit, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                db.memoDAO().restore(LocalDateTime.now())
+            }
+
+            override fun onPostExecute(result: Unit?) {
+                getAllActiveMemo()
+            }
+
+        }).execute()
+    }
+
+    private fun getMenu() {
+        vibrate()
+    }
+
+    private fun setButtonEvent() {
+
+        // Add Event
+        findViewById<Button>(R.id.button_add).setOnClickListener {
+            val memo = MemoEntity(null, textView.text.toString())
+            insertMemo(memo)
+        }
+
+        // Restore Event
+        findViewById<ImageView>(R.id.btn_restore).setOnClickListener {
+            restore()
+        }
+
+        // Menu page
+        findViewById<ImageView>(R.id.btn_menu).setOnClickListener {
+            getMenu()
+        }
     }
 }
