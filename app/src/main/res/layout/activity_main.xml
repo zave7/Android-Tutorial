@@ -19,6 +19,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_baseline_menu"
+        app:layout_constraintStart_toEndOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="20dp"/>
+
     <EditText
         android:id="@+id/edittext_memo"
         android:layout_width="210dp"
