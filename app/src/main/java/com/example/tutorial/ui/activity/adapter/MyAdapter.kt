@@ -27,6 +27,9 @@ class MyAdapter (private val context : Context,
     }
 
     // 뷰 홀더를 작성
+    // recyclerview 에 인플레이트할 view를 지정하고 제네릭에서 선언한 View Holder를 상속받은
+    // 커스텀 클래스를 반환한다.
+    // 이 메서드는 화면이 새로 그려질때 한번 호출된다.
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): MyViewHolder {
         Log.d("onCreateViewHolder", "호출")
@@ -34,6 +37,9 @@ class MyAdapter (private val context : Context,
         return MyViewHolder(itemView)
     }
 
+    // RecyclerView.ViewHolder 를 상속받은 커스텀 홀더의 오브젝트에 데이터를 바인딩한다.
+    // position 순서대로 호출이 된다.
+    // 이벤트를 걸 수도 있고 다른 부가적인 작업을 하면 된다.
     override fun onBindViewHolder(@NonNull holder: MyViewHolder, position: Int) {
         Log.d("onBindViewHolder", "호출")
         Log.d("호출 position : ", "$position")
