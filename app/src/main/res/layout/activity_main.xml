@@ -58,9 +58,9 @@
     <ImageView
         android:id="@+id/top_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/design_default_color_on_secondary"
+        android:background="@color/baseLineColor"
         app:layout_constraintTop_toBottomOf="@id/topPanel"
         app:layout_constraintStart_toStartOf="@id/recyclerView"
         app:layout_constraintEnd_toEndOf="@id/recyclerView"
