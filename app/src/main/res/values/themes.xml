@@ -2,9 +2,10 @@
     <!-- Base application theme. -->
     <style name="Theme.Tutorial" parent="Theme.MaterialComponents.Light.NoActionBar"> <!-- NoActionBar 로 바꾸면 액션바가 사라짐 -->
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-<!--        <item name="colorPrimaryVariant">@color/white</item>-->
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+<!--        <item name="colorPrimary">@color/purple_500</item>-->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/gray</item>
+<!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

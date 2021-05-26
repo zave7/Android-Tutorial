@@ -78,6 +78,23 @@
         android:autofillHints="insert memo..."
         android:inputType="text" />
 
+<!--    <ImageButton-->
+<!--        android:id="@+id/button_add"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="12dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:text="@string/add"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textColor="@color/baseButtonColor"-->
+<!--        android:background="@drawable/button_add_selector"-->
+<!--        android:layout_marginStart="40dp"-->
+<!--        android:src="@drawable/ic_check"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/edittext_memo"-->
+<!--        android:contentDescription="TODO" />-->
+
     <Button
         android:id="@+id/button_add"
         android:layout_width="0dp"
@@ -87,7 +104,7 @@
         android:text="@string/add"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:background="@drawable/button_puple"
+        android:background="@drawable/button_add"
         android:layout_marginStart="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
