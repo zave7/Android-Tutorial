@@ -7,16 +7,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/set_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="삭제방지"
+            android:text="삭제"
+            android:textStyle="bold"
             android:textSize="24sp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -24,13 +28,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="테스트"
+            android:layout_marginTop="3dp"
+            android:text="좌,우 스와이프 및 길게 눌렀을 때 삭제 방지 설정"
             app:layout_constraintStart_toStartOf="@id/set_remove"
             app:layout_constraintTop_toBottomOf="@id/set_remove"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
