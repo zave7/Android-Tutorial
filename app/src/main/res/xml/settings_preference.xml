@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="기타">
+
+        <SwitchPreference
+            android:key="prevent_deletion"
+            android:defaultValue="false"
+            android:title="삭제 방지"
+            android:summary="메모를 삭제할 때 알림창을 띄웁니다"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>
